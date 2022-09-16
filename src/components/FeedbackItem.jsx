@@ -21,7 +21,7 @@ function FeedbackItem({ item, handleDelete }) {
         <FaTimes onClick={() => handleDelete(item.id)} color="purple" />
       </button>
       <div className="text-display">{item.text}</div>
-      <button onClick={handleClick}>Click</button>
+      {/* <button onClick={handleClick}>Click</button> */}
     </Card>
   );
 }
