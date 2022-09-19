@@ -1,13 +1,25 @@
-import React, { useState } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import Card from "./shared/Card";
 import Button from "./shared/Button";
 import RatingSelect from "./RatingSelect";
+import FeedbackContext from "../context/FeedbackContext";
 
-function FeedbackForm({ select, handleAdd }) {
+function FeedbackForm({ select }) {
   const [text, setText] = useState("");
   const [btnDisabled, setBtnDisabled] = useState(true);
   const [message, setMessage] = useState("");
   const [rating, setRating] = useState(10);
+  const { addFeedback, feedbackEdit, updateFeedback } =
+    useContext(FeedbackContext);
+
+  // useEffect takes in a second argument - an array of dependencies that if it changes, the first argument (whatever is in the {}) is going to run. if we keep it empty it will simply run whenever the components loads.
+  useEffect(() => {
+    if (feedbackEdit.edit === true) {
+      setBtnDisabled(false);
+      setText(feedbackEdit.item.text);
+      setRating(feedbackEdit.item.rating);
+    }
+  }, [feedbackEdit]);
 
   const handleTextChange = (e) => {
     if (text === "") {
@@ -30,9 +42,12 @@ function FeedbackForm({ select, handleAdd }) {
         text,
         rating,
       };
-
-      handleAdd(newFeedback);
-      setText("");
+      if (feedbackEdit.edit === true) {
+        updateFeedback(feedbackEdit.item.id, newFeedback);
+      } else {
+        addFeedback(newFeedback);
+        setText("");
+      }
     }
   };
 
