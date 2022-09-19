@@ -5,16 +5,7 @@ import Card from "./shared/Card";
 import FeedbackContext from "../context/FeedbackContext";
 
 function FeedbackItem({ item }) {
-  // const [rating, setRating] = useState(7);
-  // const [text, setText] = useState("This is an example of a feedback item.");
   const { deleteFeedback, editFeedback } = useContext(FeedbackContext);
-
-  // const handleClick = () => {
-  //   setRating((prev) => {
-  //     console.log(prev);
-  //     return prev + 1;
-  //   });
-  // };
 
   return (
     <Card>
@@ -26,7 +17,6 @@ function FeedbackItem({ item }) {
         <FaEdit color="purple" />
       </button>
       <div className="text-display">{item.text}</div>
-      {/* <button onClick={handleClick}>Click</button> */}
     </Card>
   );
 }
