@@ -1,4 +1,4 @@
-import { createContext, useState } from "react";
+import { createContext, useState, useEffect } from "react";
 import { v4 as uuidv4 } from "uuid";
 
 // create variable to hold global state
@@ -6,28 +6,29 @@ const FeedbackContext = createContext();
 
 // create provider for context to allow global state to be passed into different components
 export const FeedbackProvider = ({ children }) => {
-  const [feedback, setFeedback] = useState([
-    {
-      id: 1,
-      text: "This is feedback item 1",
-      rating: 10,
-    },
-    {
-      id: 2,
-      text: "This is feedback item 2",
-      rating: 9,
-    },
-    {
-      id: 3,
-      text: "This is feedback item 3",
-      rating: 7,
-    },
-  ]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [feedback, setFeedback] = useState([]);
 
   const [feedbackEdit, setFeedbackEdit] = useState({
     item: {},
     edit: false,
   });
+
+  // useEffect to display feedback data on load
+  useEffect(() => {
+    fetchFeedback();
+  }, []);
+
+  // fetch feedback data from server endpoint
+  const fetchFeedback = async () => {
+    const response = await fetch(
+      "http://localhost:5000/feedback?_sort=id&_order=desc"
+    );
+    const data = await response.json();
+    console.log(data);
+    setFeedback(data);
+    setIsLoading(false);
+  };
 
   // delete a feedback item
   const deleteFeedback = (id) => {
@@ -60,6 +61,7 @@ export const FeedbackProvider = ({ children }) => {
       value={{
         feedback,
         feedbackEdit, // this is the actual state of the item object that needs to be edited
+        isLoading,
         deleteFeedback,
         addFeedback,
         editFeedback, // this is the function that runs in <FeedbackItem/>
